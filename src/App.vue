@@ -10,7 +10,7 @@
       <div class="container">
         <div class="row">
           <div class="col">
-            <PanelComponent
+            <PanelComponentCurrencies
               :title="titleList[0]"
               :dataForFilter="apiDataCurrencies"
             >
@@ -19,9 +19,9 @@
                                    :requireSymbols="scope.requireSymbols"
               ></DataTableCurrencies>
 
-            </PanelComponent>
+            </PanelComponentCurrencies>
 
-            <!--<PanelComponent
+            <PanelComponentCurrencies
               :title="titleList[1]"
               :dataForFilter="apiDataCurrencies"
             >
@@ -30,21 +30,16 @@
                                    :requireSymbols="scope.requireSymbols"
               ></DataTableCurrencies>
 
-            </PanelComponent>-->
+            </PanelComponentCurrencies>
           </div>
 
-          <!--<div class="col">
-            <div class="panel panel_statistics panel__blur">
-              <div class="panel_title">
-                <h3>Статистика</h3>
-              </div>
-            </div>
-            <div class="panel panel__blur">
-              <div class="panel_title">
-                <h3>To do</h3>
-              </div>
-            </div>
-          </div>-->
+          <div class="col">
+            <PanelComponentToDo
+                    :title="titleList[3]"
+            >
+
+            </PanelComponentToDo>
+          </div>
         </div>
       </div>
     </main>
@@ -55,8 +50,9 @@
 <script>
   import ThePortfolioStatus from './components/ThePortfolioStatus.vue';
   import TheNavigationList from './components/TheNavigationList.vue';
-  import PanelComponent from './components/PanelComponent.vue';
+  import PanelComponentCurrencies from './components/PanelComponentCurrencies.vue';
   import DataTableCurrencies from './components/DataTableCurrencies.vue';
+  import PanelComponentToDo from './components/PanelComponentToDo.vue';
 
   export default {
     name: 'app',
@@ -69,8 +65,9 @@
     components: {
       ThePortfolioStatus,
       TheNavigationList,
-      PanelComponent,
-      DataTableCurrencies
+      PanelComponentCurrencies,
+      DataTableCurrencies,
+      PanelComponentToDo
     },
     methods: {
       loadData() {

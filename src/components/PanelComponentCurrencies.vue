@@ -43,21 +43,21 @@
     methods: {
       addSymbol() {
         var value = this.symbolInput && this.symbolInput.trim();
-        var ValueExist = this.dataForFilter.some(function(item) { return value == item['symbol'].toLowerCase() });
+        var valueExist = this.dataForFilter.some(function(item) { return value == item['symbol'].toLowerCase() });
 
-        if (!value || !ValueExist) {
+        if (!value || !valueExist) {
           alert('Нет таких данных');
           return;
         }
         if (this.requireSymbols.hasOwnProperty(value)) {
           this.requireSymbols[value].push({
-            id: Date.now(),
+            id: Math.random().toString(36).slice(2),
             title: value,
-            price: '',
-            sum: ''
+            cellPrice: { id: Math.random().toString(36).slice(2), value: '' },
+            cellSum: { id: Math.random().toString(36).slice(2), value: '' }
           });
         } else {
-          this.$set(this.requireSymbols, value, [ {id: Date.now(), title: value, price: '', sum: ''} ]);
+          this.$set(this.requireSymbols, value, [ { id: Math.random().toString(36).slice(2), title: value, cellPrice: { id: Math.random().toString(36).slice(2), value: '' }, cellSum: { id: Math.random().toString(36).slice(2), value: '' }} ]);
         }
         this.symbolInput = '';
       },
@@ -85,6 +85,7 @@
        background-attachment: fixed;
        background-position: 50% 50%;
        background-repeat: no-repeat;
+       background-size: cover;
      }
 
     &_title {
@@ -111,15 +112,19 @@
        }
 
       label {
+        position: relative;
         display: inline-block;
         margin: 0 .5rem;
+        opacity: 1;
         color: #fff;
         font-weight: 400;
         font-size: 1.6rem;
+        user-select: none;
       }
 
       .form-control {
-        width: 10rem;
+        width: 100%;
+        max-width: 10rem;
         height: 2.8rem;
         padding: .6rem 1.2rem;
         outline: 0;
@@ -149,6 +154,14 @@
         &:-moz-placeholder { /* Firefox 18- */
           color: #a8a8a8;
         }
+
+        &__price {
+           opacity: 0;
+           position: absolute;
+           top: .1rem;
+           right: 0;
+           padding-right: .4rem;
+         }
       }
     }
 
