@@ -1,44 +1,28 @@
 <template>
   <div id="app">
     <header>
-      <ThePortfolioStatus></ThePortfolioStatus>
+      <ThePortfolioStatusComponent></ThePortfolioStatusComponent>
     </header>
 
-    <TheNavigationList v-once></TheNavigationList>
+    <TheNavigationListComponent v-once></TheNavigationListComponent>
 
     <main class="main">
       <div class="container">
         <div class="row">
           <div class="col">
-            <PanelComponentCurrencies
-              :title="titleList[0]"
-              :dataForFilter="apiDataCurrencies"
-            >
-              <DataTableCurrencies slot-scope="scope"
-                                   :filteredDataList="scope.filteredCurrencyData"
-                                   :requireSymbols="scope.requireSymbols"
-              ></DataTableCurrencies>
+            <CurrenciesComponent
+                    title="Торговля"
+                    :apiCurrencyList="apiCurrencyList">
+            </CurrenciesComponent>
 
-            </PanelComponentCurrencies>
-
-            <PanelComponentCurrencies
-              :title="titleList[1]"
-              :dataForFilter="apiDataCurrencies"
-            >
-              <DataTableCurrencies slot-scope="scope"
-                                   :filteredDataList="scope.filteredCurrencyData"
-                                   :requireSymbols="scope.requireSymbols"
-              ></DataTableCurrencies>
-
-            </PanelComponentCurrencies>
+            <CurrenciesComponent
+                    title="Инвестирование"
+                    :apiCurrencyList="apiCurrencyList">
+            </CurrenciesComponent>
           </div>
 
           <div class="col">
-            <PanelComponentToDo
-                    :title="titleList[3]"
-            >
-
-            </PanelComponentToDo>
+            <ToDoComponent></ToDoComponent>
           </div>
         </div>
       </div>
@@ -48,33 +32,31 @@
 </template>
 
 <script>
-  import ThePortfolioStatus from './components/ThePortfolioStatus.vue';
-  import TheNavigationList from './components/TheNavigationList.vue';
-  import PanelComponentCurrencies from './components/PanelComponentCurrencies.vue';
-  import DataTableCurrencies from './components/DataTableCurrencies.vue';
-  import PanelComponentToDo from './components/PanelComponentToDo.vue';
+  import ThePortfolioStatusComponent from './components/ThePortfolioStatusComponent.vue';
+  import TheNavigationListComponent from './components/TheNavigationListComponent.vue';
+  import CurrenciesComponent from './components/CurrenciesComponent.vue';
+  import ToDoComponent from './components/ToDoComponent.vue';
+
 
   export default {
     name: 'app',
     data() {
       return {
-        apiDataCurrencies: [],
-        titleList: ['Торговля', 'Инвестирование', 'Статистика', 'To do']
+        apiCurrencyList: []
       }
     },
     components: {
-      ThePortfolioStatus,
-      TheNavigationList,
-      PanelComponentCurrencies,
-      DataTableCurrencies,
-      PanelComponentToDo
+      ThePortfolioStatusComponent,
+      TheNavigationListComponent,
+      CurrenciesComponent,
+      ToDoComponent
     },
     methods: {
       loadData() {
         this.$http
           .get('https://api.coinmarketcap.com/v1/ticker/?limit=0')
           .then(function(response) {
-            this.apiDataCurrencies = response.data;
+            this.apiCurrencyList = response.data;
           })
           .catch(function(error) {
             console.log('We got some error: ' + error.data);

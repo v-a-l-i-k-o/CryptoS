@@ -11,31 +11,65 @@
       </div>
     </div>
     <div class="panel_body">
-      <slot
-        :filteredCurrencyData="filteredData"
-        :requireSymbols="requireSymbols"
-      ></slot>
+      <DataTableComponent
+              :currencyList="filteredCurrencyList"
+              :requiredUserSymbols="requiredUserSymbols"
+              @delete-row-1="removeSymbol">
+      </DataTableComponent>
     </div>
   </div>
 </template>
 
 <script>
+
+  // localStorage
+  const STORAGE_KEY_WATCHLIST = 'watchlist';
+  var currencyStorage = {
+    fetch: function (subtitle) {
+      var requiredUserSymbols = JSON.parse(localStorage.getItem(STORAGE_KEY_WATCHLIST + `_${ subtitle }`) || '{}');
+      return requiredUserSymbols
+    },
+    save: function (requiredUserSymbols, subtitle) {
+      localStorage.setItem(STORAGE_KEY_WATCHLIST + `_${ subtitle }`, JSON.stringify(requiredUserSymbols))
+    }
+  };
+
+  import DataTableComponent from './DataTableComponent.vue';
+
   export default {
     props: {
       title: String,
-      dataForFilter: Array
+      apiCurrencyList: Array
     },
     data() {
       return {
-        requireSymbols: {},
+        requiredUserSymbols: null,
         symbolInput: ''
       }
     },
+    components: {
+      DataTableComponent
+    },
+    created() {
+      this.requiredUserSymbols = currencyStorage.fetch(this.title);
+    },
+    watch: {
+      requiredUserSymbols: {
+        handler(obj) {
+          currencyStorage.save(obj, this.title);
+        },
+        deep: true
+      }
+    },
     computed: {
-      filteredData() {
+      filteredCurrencyList() {
         var self = this;
-        var result = self.dataForFilter.filter(function(item) {
-          return self.requireSymbols.hasOwnProperty(item['symbol'].toLowerCase())
+        var result = self.apiCurrencyList.filter(function(item, index, arr) {
+          if (self.requiredUserSymbols.hasOwnProperty(item['symbol'].toLowerCase())) {
+            return arr.map(function(mapObj) { return mapObj['symbol'] }).indexOf(item['symbol']) === index;
+          } else {
+            return false;
+          }
         });
         return result;
       }
@@ -43,30 +77,28 @@
     methods: {
       addSymbol() {
         var value = this.symbolInput && this.symbolInput.trim();
-        var valueExist = this.dataForFilter.some(function(item) { return value == item['symbol'].toLowerCase() });
+        var isValueExist = this.apiCurrencyList.some(function(item) { return value == item['symbol'].toLowerCase() });
 
-        if (!value || !valueExist) {
+        if (!value || !isValueExist) {
           alert('Нет таких данных');
           return;
         }
-        if (this.requireSymbols.hasOwnProperty(value)) {
-          this.requireSymbols[value].push({
+        if (this.requiredUserSymbols.hasOwnProperty(value)) {
+          this.requiredUserSymbols[value].push({
             id: Math.random().toString(36).slice(2),
-            title: value,
-            cellPrice: { id: Math.random().toString(36).slice(2), value: '' },
-            cellSum: { id: Math.random().toString(36).slice(2), value: '' }
+            userPrice: { id: Math.random().toString(36).slice(2), value: '' },
+            userSum: { id: Math.random().toString(36).slice(2), value: '' }
           });
         } else {
-          this.$set(this.requireSymbols, value, [ { id: Math.random().toString(36).slice(2), title: value, cellPrice: { id: Math.random().toString(36).slice(2), value: '' }, cellSum: { id: Math.random().toString(36).slice(2), value: '' }} ]);
-        }
+          this.$set(this.requiredUserSymbols, value, [ { id: Math.random().toString(36).slice(2), userPrice: { id: Math.random().toString(36).slice(2), value: '' }, userSum: { id: Math.random().toString(36).slice(2), value: '' }} ]);
+        };
         this.symbolInput = '';
       },
 
-      removeSymbol(obj) { // { symbol: symbol, position: index }
-        var symbol = obj['symbol'];
-        var pos = obj['position'];
-        this.requireSymbols[symbol].splice(pos, 1);
-        if (!this.requireSymbols[symbol].length) this.$delete(this.requireSymbols, symbol);
+      removeSymbol(symbol, position) { // { symbol: symbol, position: pos }
+        console.log('emit');
+        this.requiredUserSymbols[symbol].splice(position, 1);
+        if (!this.requiredUserSymbols[symbol].length) this.$delete(this.requiredUserSymbols, symbol);
       }
     }
   }
