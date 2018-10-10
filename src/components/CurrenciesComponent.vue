@@ -96,7 +96,6 @@
       },
 
       removeSymbol(symbol, position) { // { symbol: symbol, position: pos }
-        console.log('emit');
         this.requiredUserSymbols[symbol].splice(position, 1);
         if (!this.requiredUserSymbols[symbol].length) this.$delete(this.requiredUserSymbols, symbol);
       }
@@ -192,6 +191,7 @@
            position: absolute;
            top: .1rem;
            right: 0;
+           cursor: pointer;
            padding-right: .4rem;
          }
       }

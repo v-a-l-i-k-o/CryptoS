@@ -1,5 +1,6 @@
-var path = require('path')
-var webpack = require('webpack')
+var path = require('path');
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   context: path.resolve(__dirname, './src'),
@@ -8,7 +9,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    //publicPath: '/dist/',
     filename: 'build.js'
   },
   module: {
@@ -59,6 +60,10 @@ module.exports = {
       }
     ]
   },
+  plugins: [new HtmlWebpackPlugin({
+    baseUrl: '',
+    template: './index.html'
+  })],
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
@@ -68,7 +73,8 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     noInfo: true,
-    overlay: true
+    overlay: true,
+    open: true
   },
   performance: {
     hints: false
