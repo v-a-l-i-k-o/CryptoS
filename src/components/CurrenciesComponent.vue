@@ -3,8 +3,8 @@
     <div class="panel_title">
       <h3>{{ title }}</h3>
       <div class="form-group form-group__for-title">
-        <label for="addInput" class="hidden-sm">Добавить сделку:</label>
-        <input type="text" class="form-control" id="addInput" placeholder="symbol"
+        <label for="" class="hidden-sm">Добавить сделку:</label>
+        <input type="text" class="form-control" placeholder="symbol"
                v-model="symbolInput"
                @keyup.enter="addSymbol"
         >

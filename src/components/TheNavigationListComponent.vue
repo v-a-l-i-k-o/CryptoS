@@ -2,9 +2,7 @@
   <nav class="nav">
     <ul class="navigation">
       <li v-for="item in tabList" :class="[ 'navigation_item', { active: currentTab == item.name } ]">
-        <a @click.prevent="currentTab = item.name" :href="item.link" class="navigation_ref">
-          {{ item.name }}
-        </a>
+        <router-link :to="item.path" @click.native.prevent="currentTab = item.name" class="navigation_ref">{{ item.name }}</router-link>
       </li>
     </ul>
   </nav>
@@ -15,8 +13,8 @@
     data: function () {
       return {
         tabList: [
-          { name: 'Инфо-панель', link: '#' },
-          { name: 'История сделок', link: '#' }
+          { name: 'Инфо-панель', path: 'info' },
+          { name: 'История сделок', path: 'history' }
         ],
         currentTab: 'Инфо-панель'
       }
